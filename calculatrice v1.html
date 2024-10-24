@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculatrice</title>
+    <style> 
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f0f0f0;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .calculator {
+            width: 275px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .display {
+            width: 242.5px;
+            height: 60px;
+            text-align: right;
+            margin-bottom: 20px;
+            margin-left:5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #f9f9f9;
+            font-size: 24px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .button {
+            width: 55px;
+            height: 55px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #e0e0e0;
+        }
+
+        .button.operator {
+            background-color: #f9a825;
+            color: white;
+        }
+
+        .button.operator:hover {
+            background-color: #f57c00;
+        }
+
+        .button.equal {
+            background-color: #4caf50;
+            color: #ffffff;
+        }
+
+        .button.delete {
+            background-color: #477bff;
+            color: #ffffff;
+        }
+
+        .button.equal:hover {
+            background-color: #388e3c;
+        }
+
+        .button.clear {
+            background-color: #d32f2f;
+            color: #ffffff;
+        }
+
+        .button.clear:hover {
+            background-color: #c62828;
+        }
+
+        .button.empty {
+            background-color: #ffffff;
+            color: #ffffff;
+
+        }
+
+        .button:disabled {
+            cursor: default;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <input type="text" class="display" id="display" disabled>
+    <br>
+    <button class="button delete" onclick="deleteLast()">⌫</button>
+    <button class="button empty" disabled>f</button>
+    <button class="button operator" onclick="appendOperator('%')">%</button>
+    <button class="button operator" onclick="appendOperator('/')">/</button>
+    <br>
+    <button class="button" onclick="appendNumber(7)">7</button>
+    <button class="button" onclick="appendNumber(8)">8</button>
+    <button class="button" onclick="appendNumber(9)">9</button>
+    <button class="button operator" onclick="appendOperator('*')">*</button>
+    <br>
+    <button class="button" onclick="appendNumber(4)">4</button>
+    <button class="button" onclick="appendNumber(5)">5</button>
+    <button class="button" onclick="appendNumber(6)">6</button>
+    <button class="button operator" onclick="appendOperator('-')">-</button>
+    <br>
+    <button class="button" onclick="appendNumber(1)">1</button>
+    <button class="button" onclick="appendNumber(2)">2</button>
+    <button class="button" onclick="appendNumber(3)">3</button>
+    <button class="button operator" onclick="appendOperator('+')">+</button>
+    <br>
+    <button class="button clear" onclick="clearDisplay()">C</button>
+    <button class="button" onclick="appendNumber(0)">0</button>
+    <button class="button" onclick="appendVirgule()">.</button>
+    <button class="button equal" onclick="calculateResult()">=</button>
+</div>
+
+<script>
+    let display = document.getElementById('display');
+
+    function checkVirgule(str) {
+        return /\.\d*$/g.test(str) || /[+\-*/]\d*\.\d*/g.test(str);
+    }
+
+    function appendNumber(number) {
+        display.value += number;
+    }
+
+    function appendOperator(operator) {
+        display.value += operator;
+    }
+
+    function clearDisplay() {
+        display.value = '';
+    }
+
+    function deleteLast(){
+        display.value = display.value.slice(0, -1);
+    }
+
+    function appendVirgule(){
+        if (!checkVirgule(display.value)) {
+            display.value += ".";
+        }
+    }
+
+    function calculateResult() {
+        try {
+            display.value = eval(display.value);
+        } catch (e) {
+            alert('Oups. Expression invalide. Réessayez.');
+            console.log("aie aie aie ! j'ai pas compris ce qu'il s'est passé ! -_-")
+            clearDisplay();
+        }
+    }
+
+    document.addEventListener('keydown', function(event) {
+        const key = event.key;
+        if (!isNaN(key)) {
+            appendNumber(key);
+        } else if (['+', '-', '*', '/', '%'].includes(key)) {
+            appendOperator(key);
+        } else if (key === 'Enter') {
+            calculateResult();
+        } else if (key === 'Escape') {
+            clearDisplay();
+        } else if (key === 'Backspace') {
+            display.value = display.value.slice(0, -1);
+        }
+    });
+</script>
+
+</body>
+</html>
